@@ -1,0 +1,15 @@
+{
+  "name": "nss_decrypt",
+  "version": "1.0.0",
+  "description": "Script to decrypt the timestamps for NSS automated attendance system",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Anurag Reddy Karri",
+  "license": "ISC",
+  "dependencies": {
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.4"
+  }
+}
