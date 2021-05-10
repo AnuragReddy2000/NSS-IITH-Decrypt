@@ -5,6 +5,7 @@
 /.pnp
 .pnp.js
 
+service_creds.json
 # testing
 /coverage
 
