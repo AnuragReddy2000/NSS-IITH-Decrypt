@@ -1,6 +1,5 @@
 import {google} from 'googleapis';
 import Cryptr from 'cryptr';
-import prompt from 'prompt-sync';
 
 const SCOPES = [
     'https://www.googleapis.com/auth/spreadsheets',
@@ -132,11 +131,10 @@ let getEventKey = async (eventId: string, auth_token: any) => {
 }
 
 let main = async () => {
-    let io = prompt()
-    console.log("Please enter the following values: ")
-    let sheetUrl = io("Google sheet Id: ");
-    let eventId  = io("Event Id: ");
-    let tolerance = io("Tolerance gap: ");
+    console.log(process.argv)
+    let sheetUrl = process.argv[2]
+    let eventId  = process.argv[3]
+    let tolerance = process.argv[4]
     const auth_token = await getAuthToken();
     const eventkey = await getEventKey(eventId, auth_token);
     if (eventkey != null){
