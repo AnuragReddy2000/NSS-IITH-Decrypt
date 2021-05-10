@@ -1,4 +1,4 @@
-name: GitHub Actions Demo
+name: Attendance verification
 on:
   workflow_dispatch:
     inputs:

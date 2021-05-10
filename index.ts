@@ -131,7 +131,6 @@ let getEventKey = async (eventId: string, auth_token: any) => {
 }
 
 let main = async () => {
-    console.log(process.argv)
     let sheetUrl = process.argv[2]
     let eventId  = process.argv[3]
     let tolerance = process.argv[4]
