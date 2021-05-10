@@ -20,5 +20,6 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v1
       - run: npm ci
+      - run: gpg --batch -d --passphrase ${{ secrets.SERVICE_SECRET }} service_creds.json.gpg > service_creds.json
       - run: npx ts-node index.ts ${{ github.event.inputs.sheetid }} ${{ github.event.inputs.eventid }} ${{ github.event.inputs.tolerance }}
       
