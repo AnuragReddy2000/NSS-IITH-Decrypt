@@ -1,5 +1,5 @@
 import {google} from 'googleapis';
-import Cryptr from 'cryptr';
+import Crypto from './CryptoUtils';
 
 const SCOPES = [
     'https://www.googleapis.com/auth/spreadsheets',
@@ -29,15 +29,6 @@ let getSpreadSheet = async (spreadsheetId : string, sheetName: string, auth:any)
     return res;
 }
 
-let decrypt = (key: string, message: string) => {
-    const crypto = new Cryptr(key);
-    try{
-        return crypto.decrypt(message)
-    } catch {
-        return "Illegal action! Key mismatch!"
-    }
-}
-
 let getTimeInSec = (timestamp: string, monthFirst = false) => {
     timestamp = timestamp.replace(",","")
     const [date, time] = timestamp.split(" ")
@@ -64,8 +55,9 @@ let verifyAttendance = async (sheetId: string, event_key: string, tolerance: Num
     let newValues = resp.data.values
     let sign_col = 3
     let fail_count = 0
+    let cipher = new Crypto(event_key);
     if (newValues != null){
-        newValues.forEach((row: any[]) => {
+        for (const row of newValues){
             if (row[0] == "Timestamp"){
                 row.forEach((value, index) => {
                     if (value == "Signature"){
@@ -76,7 +68,7 @@ let verifyAttendance = async (sheetId: string, event_key: string, tolerance: Num
                 row.push("Timing verification")
             }
             else{
-                const dec_ts = decrypt(event_key, row[sign_col])
+                const dec_ts = await cipher.decrypt(row[sign_col]);
                 row.push(dec_ts)
                 if (dec_ts != "Illegal action! Key mismatch!"){
                     const time_diff = (getTimeInSec(row[0], true) - getTimeInSec(dec_ts))/1000
@@ -93,7 +85,7 @@ let verifyAttendance = async (sheetId: string, event_key: string, tolerance: Num
                     fail_count += 1
                 }
             }
-        })
+        }
         sheets.spreadsheets.values.update({
             spreadsheetId: sheetId,
             auth: auth_token,
@@ -105,7 +97,7 @@ let verifyAttendance = async (sheetId: string, event_key: string, tolerance: Num
                 values: newValues
             }
         })
-        return "Success! Total fails: "  + fail_count.toString() 
+        return "Successfully Finished! Total verification fails: "  + fail_count.toString() 
     }
     else{
         return "Aborting! Empty sheet!!"
@@ -119,7 +111,7 @@ let getEventKey = async (eventId: string, auth_token: any) => {
     });
     let eventKey = null
     if (resp.data.fields != null){
-        resp.data.fields["details"].arrayValue?.values?.forEach((each) => {
+        resp.data.fields["details"].arrayValue?.values?.forEach((each: any) => {
             if (each.mapValue?.fields != null){
                 if (each.mapValue?.fields["eventId"].stringValue == eventId){
                     eventKey =  each.mapValue?.fields["eventkey"].stringValue

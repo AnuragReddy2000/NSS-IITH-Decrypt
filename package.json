@@ -6,18 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "type": "module",
   "author": "Anurag Reddy Karri",
   "license": "ISC",
   "dependencies": {
-    "cryptr": "^6.0.2",
     "googleapis": "^73.0.0",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.4"
   },
   "devDependencies": {
-    "@types/cryptr": "^4.0.1",
-    "@types/node": "^15.0.2",
-    "@types/prompt-sync": "^4.1.0"
+    "@types/node": "^15.0.2"
   }
 }
